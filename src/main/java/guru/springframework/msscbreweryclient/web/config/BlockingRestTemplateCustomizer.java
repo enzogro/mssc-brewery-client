@@ -1,5 +1,6 @@
 package guru.springframework.msscbreweryclient.web.config;
 
+
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
@@ -24,28 +25,26 @@ public class BlockingRestTemplateCustomizer implements RestTemplateCustomizer {
     private final Integer socketTimeout;
 
     public BlockingRestTemplateCustomizer(@Value("${sfg.maxtotalconnections}") Integer maxTotalConnections,
-                                          @Value("${sfg.defaultmaxtotalconnections}") Integer defaultMaxTotalConnetions,
-                                          @Value("${sfg.connectionrequesttimeout}")Integer connectionRequestTimeout,
-                                          @Value("${sfg.sockettimeout}")Integer socketTimeout) {
+            @Value("${sfg.defaultmaxtotalconnections}") Integer defaultMaxTotalConnetions,
+            @Value("${sfg.connectionrequesttimeout}") Integer connectionRequestTimeout,
+            @Value("${sfg.sockettimeout}") Integer socketTimeout) {
         this.maxTotalConnections = maxTotalConnections;
         this.defaultMaxTotalConnetions = defaultMaxTotalConnetions;
         this.connectionRequestTimeout = connectionRequestTimeout;
         this.socketTimeout = socketTimeout;
     }
 
-    public ClientHttpRequestFactory clientHttpRequestFactory(){
+    public ClientHttpRequestFactory clientHttpRequestFactory() {
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
         connectionManager.setMaxTotal(maxTotalConnections);
         connectionManager.setDefaultMaxPerRoute(defaultMaxTotalConnetions);
 
-        RequestConfig requestConfig = RequestConfig
-                .custom()
+        RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectionRequestTimeout(connectionRequestTimeout)
                 .setSocketTimeout(socketTimeout)
                 .build();
 
-        CloseableHttpClient httpClient = HttpClients
-                .custom()
+        CloseableHttpClient httpClient = HttpClients.custom()
                 .setConnectionManager(connectionManager)
                 .setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())
                 .setDefaultRequestConfig(requestConfig)
