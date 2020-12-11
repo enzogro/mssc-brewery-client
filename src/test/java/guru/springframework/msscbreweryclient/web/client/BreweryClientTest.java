@@ -1,6 +1,7 @@
 package guru.springframework.msscbreweryclient.web.client;
 
 
+import java.net.URI;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,19 @@ class BreweryClientTest {
         BeerDto dto = client.getBeerById(UUID.randomUUID());
 
         assertNotNull(dto);
+
+    }
+
+    @Test
+    void testSaveNewBeer() {
+        //given
+        BeerDto beerDto = BeerDto.builder().beerName("New Beer").build();
+
+        URI uri = client.saveNewBeer(beerDto);
+
+        assertNotNull(uri);
+
+        System.out.println(uri.toString());
 
     }
 }
