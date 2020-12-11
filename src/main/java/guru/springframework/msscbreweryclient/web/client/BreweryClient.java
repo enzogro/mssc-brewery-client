@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import guru.springframework.msscbreweryclient.web.model.BeerDto;
+import guru.springframework.msscbreweryclient.web.model.CustomerDto;
 
 /**
  * Created by jt on 2019-04-23.
@@ -20,6 +21,7 @@ public class BreweryClient {
 
     private final RestTemplate restTemplate;
     public final String BEER_PATH_V1 = "/api/v1/beer/";
+    public final String CUSTOMER_PATH_V1 = "/api/v1/customer/";
     private String apihost;
 
     public BreweryClient(RestTemplateBuilder restTemplateBuilder) {
@@ -34,15 +36,31 @@ public class BreweryClient {
         return restTemplate.postForLocation(apihost + BEER_PATH_V1, beerDto);
     }
 
-    public void updateBeer(UUID uuid, BeerDto beerDto){
-        restTemplate.put(apihost + BEER_PATH_V1 + "/" + uuid.toString(), beerDto);
+    public void updateBeer(UUID uuid, BeerDto beerDto) {
+        restTemplate.put(apihost + BEER_PATH_V1 + uuid, beerDto);
     }
 
-    public void deleteBeer(UUID uuid){
-        restTemplate.delete(apihost + BEER_PATH_V1 + "/" + uuid );
+    public void deleteBeer(UUID uuid) {
+        restTemplate.delete(apihost + BEER_PATH_V1 + uuid);
     }
 
     public void setApihost(String apihost) {
         this.apihost = apihost;
+    }
+
+    public CustomerDto getCustomerById(UUID customerId) {
+        return restTemplate.getForObject(apihost + CUSTOMER_PATH_V1 + customerId.toString(), CustomerDto.class);
+    }
+
+    public URI saveNewCustomer(CustomerDto customerDto) {
+        return restTemplate.postForLocation(apihost + CUSTOMER_PATH_V1, customerDto);
+    }
+
+    public void updateCustomer(UUID customerId, CustomerDto customerDto) {
+        restTemplate.put(apihost + CUSTOMER_PATH_V1 + customerId, customerDto);
+    }
+
+    public void deleteCustomer(UUID customerId) {
+        restTemplate.delete(apihost + CUSTOMER_PATH_V1 + customerId);
     }
 }
